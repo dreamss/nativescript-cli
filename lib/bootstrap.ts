@@ -31,6 +31,7 @@ $injector.requireCommand("deploy", "./commands/deploy");
 $injector.requireCommand("dev-post-install", "./commands/post-install");
 $injector.requireCommand("emulate", "./commands/emulate");
 $injector.requireCommand("list-devices", "./commands/list-devices");
+$injector.requireCommand("add-lib", "./commands/add-library");
 
 $injector.require("npm", "./node-package-manager");
 $injector.require("lockfile", "./lockfile");

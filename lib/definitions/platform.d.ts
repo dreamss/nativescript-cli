@@ -1,5 +1,6 @@
 interface IPlatformService {
 	addPlatforms(platforms: string[]): IFuture<void>;
+	addLib(platform: string, libFolder: string): IFuture<void>;
 	getInstalledPlatforms(): IFuture<string[]>;
 	getAvailablePlatforms(): IFuture<string[]>;
 	getPreparedPlatforms(): IFuture<string[]>;

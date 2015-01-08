@@ -19,6 +19,11 @@ class IOSProjectService implements  IPlatformProjectService {
 		private $errors: IErrors,
 		private $iOSEmulatorServices: Mobile.IEmulatorPlatformServices) { }
 
+	public addLib(projectRoot: string, folderPath: string): IFuture<void> {
+		return (() => {
+		}).future<void>()();
+	}
+
 	public get platformData(): IPlatformData {
 		return {
 			frameworkPackageName: "tns-ios",

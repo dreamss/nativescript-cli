@@ -10,6 +10,7 @@ export class ProjectData implements IProjectData {
 	public projectFilePath: string;
 	public projectId: string;
 	public projectName: string;
+	public projectLibs: string[];
 
 	constructor(private $fs: IFileSystem,
 		private $errors: IErrors,

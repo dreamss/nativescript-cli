@@ -20,6 +20,50 @@ class AndroidProjectService implements IPlatformProjectService {
 
 	}
 
+	public addLib(projectRoot: string, libPath: string): IFuture<void> {
+		return (() => {
+			var targetApi = this.getTarget(projectRoot).wait();
+			// ant is not working with absolute path in android.library.reference.xxx, so make a relative path
+			var relativePath = path.relative(projectRoot, libPath);
+			var absPath = path.resolve(projectRoot, relativePath);
+			this.$logger.info("Lib relative path: %s", relativePath);
+			this.$logger.info("Lib absolute path: %s", absPath);
+
+			// we need to check whether we have a project library or just a *.jar file
+			var pathStats = this.$fs.getFsStats(libPath).wait();
+			if(pathStats.isDirectory()){
+				// we have a library project and need to call android update --library command
+				// TODO: validate further - we need a .project file in the directory
+
+				// 1. add build.xml to the referenced library
+				this.$logger.info("Lib absolute path: %s", absPath);
+				var updateArgs = [
+					"-p", path.resolve(absPath)
+				];
+				this.spawn("android", ['update', 'project'].concat(updateArgs)).wait();
+
+				// 2. Call android update project --path --target --library command
+				var args = [
+					"--path", projectRoot,
+					"--target", targetApi,
+					"--library", relativePath
+				];
+				this.spawn("android", ['update', 'project'].concat(args)).wait();
+			} else {
+				// we have a jar package and need to copy it to the libs/ folder
+				var fileExists = this.$fs.exists(absPath).wait();
+				if(fileExists) {
+					var fileName = this.$fs.getUniqueFileName(absPath).wait();
+					var targetDir = path.join(this.platformData.projectRoot, "libs");
+					var targetFileName = path.join(targetDir, fileName);
+					this.$logger.info("Target file name: %s", targetFileName);
+
+					this.$fs.copyFile(absPath, targetFileName).wait();
+				}
+			}
+		}).future<void>()();
+	}
+
 	public get platformData(): IPlatformData {
 		return {
 			frameworkPackageName: "tns-android",

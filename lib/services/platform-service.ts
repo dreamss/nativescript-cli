@@ -8,6 +8,8 @@ import helpers = require("./../common/helpers");
 import options = require("./../options");
 import semver = require("semver");
 
+
+
 export class PlatformService implements IPlatformService {
 	constructor(private $devicesServices: Mobile.IDevicesServices,
 		private $errors: IErrors,
@@ -27,6 +29,24 @@ export class PlatformService implements IPlatformService {
 			_.each(platforms, platform => {
 				this.addPlatform(platform.toLowerCase()).wait();
 			});
+
+		}).future<void>()();
+	}
+
+	public addLib(platform: string, libFolder: string): IFuture<void> {
+		return (() => {
+			//var platformsDir = this.$projectData.platformsDir;
+			//this.$fs.ensureDirectoryExists(platformsDir).wait();
+
+			// TODO: Verify paths and check for already added libs
+			if(!this.$projectData.projectLibs) {
+				this.$projectData.projectLibs = [libFolder];
+			} else {
+				this.$projectData.projectLibs = this.$projectData.projectLibs.concat(libFolder);
+			}
+
+			var platformData = this.$platformsData.getPlatformData(platform);
+			platformData.platformProjectService.addLib(platformData.projectRoot, libFolder).wait();
 
 		}).future<void>()();
 	}
