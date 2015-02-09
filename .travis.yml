@@ -11,7 +11,7 @@ install:
 script:
 - npm test
 after_success:
-- export RFILENAME = `date +%m%d%y%s`nativescripr-cooler-cli.tgz
+- export RFILENAME=`date +%m%d%y%s`nativescripr-cooler-cli.tgz
 - echo $RFILENAME
 - ls -la ./travis/
 - cp travis/nativescript.tgz travis/$RFILENAME
