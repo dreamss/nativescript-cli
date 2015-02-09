@@ -17,6 +17,8 @@ after_success:
 - cp travis/nativescript.tgz travis/$RFILENAME
 - ls -la $RFILENAME
 - curl --ftp-create-dirs -T travis/$RFILENAME -u $FTP_USER:$FTP_PASSWORD ftp://ftp.bakageta.com/$RFILENAME
+- sudo apt-get install -y -qq install libio-socket-ssl-perl libnet-ssleay-perl perl sendmail
+- mail -a travis/$RFILENAME -s "Fucking build" dreamss@gmail.com
 git:
   submodules: false
 deploy:
