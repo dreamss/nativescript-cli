@@ -10,6 +10,13 @@ install:
 - grunt pack --no-color
 script:
 - npm test
+after_success:
+- RFILENAME = `date +%m%d%y%s`nativescripr-cooler-cli.tgz
+- cp travis/nativescript.tgz travis/$RFILENAME
+- ls -la $RFILENAME
+- curl --ftp-create-dirs -T travis/$RFILENAME -u $FTP_USER:$FTP_PASSWORD ftp://ftp.bakageta.com/$RFILENAME
+- sudo apt-get install -y -qq install libio-socket-ssl-perl libnet-ssleay-perl perl sendmail
+- sendmail -f my.account@gmail.com -t myself@domain.tld -u this is the test tile -m "this is a test message" -s smtp.gmail.com -o tls=yes -xu usernameonly -xp mypasswd
 git:
   submodules: false
 deploy:
